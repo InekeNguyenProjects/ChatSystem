@@ -42,7 +42,7 @@ public class Server {
 				System.out.println("Server waiting for Clients on port " + port + "."); 
 				Socket socket = serverSocket.accept(); //if requested from client, the connection is accepted
 				
-				// Check if the server got disconnected from trying to process client's request
+				// Check if the server got disconnected from trying to process the client's request
 				if (!serverIsAlive) {
 					System.out.println("Oh no! Server got disconnected.");
 					break;
