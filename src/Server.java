@@ -44,7 +44,7 @@ public class Server {
 				
 				// Check if the server got disconnected from trying to process the client's request
 				if (!serverIsAlive) {
-					System.out.println("Oh no! Server got disconnected.");
+					System.out.println("Oh no! Server got disconnected. Exiting the system.");
 					break;
 				}
 				
