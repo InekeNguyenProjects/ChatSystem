@@ -26,7 +26,7 @@ public class Server {
 
 	public Server (int port) {
 		this.port =port;
-		time = new SimpleDateFormat("HH:MM:ss");
+		time = new SimpleDateFormat("HH:MM");
 		clientList = new ArrayList <Client>();
 		
 	}
