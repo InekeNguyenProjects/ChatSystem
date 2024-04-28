@@ -81,7 +81,7 @@ public class Client  {
         try {
             output.writeObject(message);
         }
-        catch(IOException e) {
+        catch (IOException e) {
             display("Exception writing to server: " + e);
         }
     }
@@ -91,7 +91,7 @@ public class Client  {
             if(input != null) 
             	input.close();
         }
-        catch(Exception e) {
+        catch (Exception e) {
         	e.getMessage();
         }
         
@@ -99,7 +99,7 @@ public class Client  {
             if(output != null) 
             	output.close();
         }
-        catch(Exception e) {
+        catch (Exception e) {
         	e.getMessage();
         }
         
@@ -107,8 +107,51 @@ public class Client  {
             if(socket != null) 
             	socket.close();
         }
-        catch(Exception e) {
+        catch (Exception e) {
         	e.getMessage();
         }
+    }
+    
+    public boolean start() {
+        // try to connect to the server
+        try {
+            socket = new Socket(server, port);
+        }
+        // exception handler if it failed
+        catch (Exception ec) {
+            display ("Error connecting to server:" + ec);
+            return false;
+        }
+
+        String message = "Connection accepted " + socket.getInetAddress() + ":" + socket.getPort();
+        display (message);
+
+        /* Creating both Data Stream */
+        try
+        {
+            input  = new ObjectInputStream (socket.getInputStream());
+            output = new ObjectOutputStream (socket.getOutputStream());
+        }
+        catch (IOException eIO) {
+            display("Exception creating new Input/output Streams: " + eIO);
+            return false;
+        }
+
+        ListenerThread listen = new ListenerThread (input);
+        listen.start();
+        
+        // Send our username to the server this is the only message that we
+        // will send as a String. All other messages will be ChatMessage objects
+        try
+        {
+            output.writeObject(username);
+        }
+        catch (IOException eIO) {
+            display("Exception doing login : " + eIO);
+            disconnectStreams();
+            return false;
+        }
+        // success we inform the caller that it worked
+        return true;
     }
 }

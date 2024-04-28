@@ -1,11 +1,12 @@
 import java.io.IOException;
+import java.io.ObjectInputStream;
 
 public class ListenerThread extends Thread {
 	
-	private Client client;
+	private ObjectInputStream input;
 	
-	public ListenerThread (Client client) {
-		this.client = client;
+	public ListenerThread (ObjectInputStream input) {
+		this.input = input;
 	}
 		
 	
@@ -13,13 +14,13 @@ public class ListenerThread extends Thread {
         while(true) {
             try {
                 // read the message form the input datastream
-                String msg = (String) client.getInputStream().readObject();
+                String message = (String) input.readObject();
                 // print the message
-                System.out.println(msg);
+                System.out.println(message);
                 System.out.print("> ");
             }
             catch(IOException e) {
-                client.display("Server has closed the connection: " + e );
+                System.out.println("Server has closed the connection: " + e );
                 break;
             }
             catch(ClassNotFoundException e2) {
