@@ -1,12 +1,14 @@
 import java.io.*;
 
-public class ChatMessege implements Serializable {
+public class ChatMessage implements Serializable {
 	
-    static final int WHO = 0, MESSAGE = 1, LOGOUT = 2;
+    private static final long serialVersionUID = 1L;
+    private static final int WHO = 0, MESSAGE = 1, LOGOUT = 2;
+    
     private int type;
     private String message;
 
-	public ChatMessege(int type, String message) {
+	public ChatMessage(int type, String message) {
 		this.type =type;
 		this.message = message;
 	}

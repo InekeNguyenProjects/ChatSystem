@@ -10,10 +10,10 @@ public class Server {
 	private static int ID;
 	
 	// ArrayList to keep all clients
-	private ArrayList <Client> clientList;
+	private ArrayList <ClientThread> clientList;
 	
 	// Display the time of the message
-	private SimpleDateFormat time;
+	private static SimpleDateFormat time;
 	
 	// Port connection
 	private int port;
@@ -27,9 +27,97 @@ public class Server {
 	public Server (int port) {
 		this.port =port;
 		time = new SimpleDateFormat("HH:MM");
-		clientList = new ArrayList <Client>();
+		clientList = new ArrayList <ClientThread>();
 		
 	}
+	
+    // to stop the server
+    protected void stop() {
+    	serverIsAlive = false;
+        try {
+            new Socket("localhost", port);
+        }
+        catch(Exception e) {
+        }
+    }
+    
+    // Display an event to the console
+    private static void display(String msg) {
+        String newTime = time.format(new Date()) + " " + msg;
+        System.out.println(newTime);
+    }
+    
+ // to broadcast a message to all Clients
+    private synchronized boolean broadcast(String message) {
+        // add timestamp to the message
+        String newtime = time.format(new Date());
+
+        // to check if message is private i.e. client to client message
+        String[] privateMessage = message.split(" ",3);
+
+        boolean isPrivate = false;
+        if(privateMessage[1].charAt(0) == '@')
+            isPrivate=true;
+
+
+        // if private message, send message to mentioned username only
+        if(isPrivate == true)
+        {
+            String tocheck=privateMessage[1].substring(1, privateMessage[1].length());
+
+            message = privateMessage[0]+ privateMessage[2];
+            String messageLf = time + " " + message + "\n";
+            boolean found = false;
+            
+            // we loop in reverse order to find the mentioned username
+            for(int y = clientList.size(); --y >= 0;)
+            {
+                ClientThread ct1 = clientList.get(y);
+                String check = ct1.getUsername();
+                if(check.equals(tocheck))
+                {
+                    // try to write to the Client if it fails remove it from the list
+                    if(!ct1.writeMsg(messageLf)) {
+                    	clientList.remove(y);
+                        display("Disconnected Client " + ct1.username + " removed from list.");
+                    }
+                    
+                    // username found and delivered the message
+                    found = true;
+                    break;
+                }
+
+
+
+            }
+            
+            // mentioned user not found, return false
+            if(found != true)
+            {
+                return false;
+            }
+        }
+        else // if message is a broadcast message
+        {
+            String messageLf = time + " " + message + "\n";
+            // display message
+            System.out.print(messageLf);
+
+            // we loop in reverse order in case we would have to remove a Client
+            // because it has disconnected
+            for(int i = clientList.size(); --i >= 0;) {
+                ClientThread ct = clientList.get(i);
+                // try to write to the Client if it fails remove it from the list
+                if(!ct.writeMsg(messageLf)) {
+                    clientList.remove(i);
+                    display("Disconnected Client " + ct.username + " is removed from list.");
+                }
+            }
+        }
+        return true;
+
+    }
+
 	
 	public void start () {
 		serverIsAlive = true;
@@ -48,18 +136,30 @@ public class Server {
 					break;
 				}
 				
-				Client client = new Client(socket);
+				ClientThread client = new ClientThread(socket);
 	            clientList.add(client);
 	            
 	            client.run(); // execute the runnable thread's code
 			}
+			
+			// Close the server and stop all client threads
+			try {
+				serverSocket.close();
+				for (int x = 0; x < clientList.size(); x++) {
+					ClientThread temp = clientList.get(x);
+				}
+			}
+			catch (Exception e) {
+				e.getMessage();	
+			}
+			
 		}
 		catch (IOException e) {
 			String msg = time.format(new Date()) + " Exception on new ServerSocket: " + e + "\n";
 			System.out.println(msg);
 		}
 		finally {
-			
+
 		}
 	}
 	
