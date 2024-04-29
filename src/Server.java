@@ -144,15 +144,24 @@ public class Server {
 	            client.run(); // execute the runnable thread's code
 			}
 			
-			// Close the server and stop all client threads
+			// Close the server and close all client threads
 			try {
 				serverSocket.close();
 				for (int x = 0; x < clientList.size(); x++) {
 					ClientThread temp = clientList.get(x);
+					
+					try {
+						temp.input.close();
+						temp.output.close();
+						temp.socket.close();
+					}
+					catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 			catch (Exception e) {
-				e.getMessage();	
+				e.printStackTrace();
 			}
 			
 		}

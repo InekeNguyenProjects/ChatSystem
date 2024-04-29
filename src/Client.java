@@ -92,7 +92,7 @@ public class Client  {
             	input.close();
         }
         catch (Exception e) {
-        	e.getMessage();
+        	e.printStackTrace();
         }
         
         try {
@@ -100,7 +100,7 @@ public class Client  {
             	output.close();
         }
         catch (Exception e) {
-        	e.getMessage();
+        	e.printStackTrace();
         }
         
         try {
@@ -108,7 +108,7 @@ public class Client  {
             	socket.close();
         }
         catch (Exception e) {
-        	e.getMessage();
+        	e.printStackTrace();
         }
     }
     

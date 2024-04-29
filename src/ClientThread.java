@@ -41,7 +41,9 @@ public class ClientThread extends Thread {
             return;
         }
         catch (ClassNotFoundException e) {
+        	e.printStackTrace();
         }
+        
         date = new Date().toString() + "\n";
     }
 	
@@ -77,19 +79,25 @@ public class ClientThread extends Thread {
             if (output != null) 
             	output.close();
         }
-        catch (Exception e) {}
+        catch (Exception e) {
+        	e.printStackTrace();
+        }
         
         try {
             if (input != null) 
             	input.close();
         }
-        catch (Exception e) {};
+        catch (Exception e) {
+        	e.printStackTrace();
+        }
         
         try {
             if (socket != null) 
             	socket.close();
         }
-        catch (Exception e) {}
+        catch (Exception e) {
+        	e.printStackTrace();
+        }
     }
     
     

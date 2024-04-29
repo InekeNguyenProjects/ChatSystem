@@ -24,7 +24,7 @@ public class ListenerThread extends Thread {
                 break;
             }
             catch(ClassNotFoundException e2) {
-            	e2.getMessage();
+            	e2.printStackTrace();
             }
         }
     }
