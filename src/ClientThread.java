@@ -77,20 +77,10 @@ public class ClientThread extends Thread {
         try {
             if (output != null) 
             	output.close();
-        }
-        catch (Exception e) {
-        	e.printStackTrace();
-        }
-        
-        try {
+            
             if (input != null) 
             	input.close();
-        }
-        catch (Exception e) {
-        	e.printStackTrace();
-        }
-        
-        try {
+            
             if (socket != null) 
             	socket.close();
         }

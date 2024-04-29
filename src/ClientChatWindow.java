@@ -84,7 +84,7 @@ public class ClientChatWindow {
     }
     
     private void sendMessage(String message){
-    	try{
+    	try {
     		output.println(name + " - " + message);
             showMessage("\n" + name + " - " + message);
         }
@@ -114,6 +114,19 @@ public class ClientChatWindow {
             e.printStackTrace();
         }
     }
+
+    private void connectToServer() throws IOException{
+        showMessage("Attempting Connection..\n");
+        connection =  new Socket(InetAddress.getByName(serverIP),14205);
+        showMessage("Connected to: "+ connection.getInetAddress().getHostName());
+    }
+    
+    private void setupStreams() throws IOException{
+        output = new PrintWriter(connection.getOutputStream(),true);
+        input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        showMessage("\n Input and Output streams are good to go. Have fun chatting! \n");
+    }
+
     
     // Main method that runs the entire chat interface
     public void run () {

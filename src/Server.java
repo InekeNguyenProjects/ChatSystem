@@ -66,7 +66,7 @@ public class Server {
 
 
         // if private message, send message to mentioned username only
-        if(isPrivate == true)
+        if (isPrivate == true)
         {
             String toCheck = privateMessage[1].substring(1, privateMessage[1].length());
 
