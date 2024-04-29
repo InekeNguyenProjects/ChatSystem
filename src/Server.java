@@ -92,8 +92,6 @@ public class Server {
                     break;
                 }
 
-
-
             }
             
             // mentioned user not found, return false
@@ -166,6 +164,35 @@ public class Server {
 
 		}
 	}
+	
+	
+    public static void main(String[] args) {
+        // start server on port 1500 unless a PortNumber is specified
+        int portNumber = 1500;
+        
+        switch (args.length) {
+        	case 0:
+        		System.out.println("Starting server with deafault values....");
+        		break;
+            case 1:
+                try {
+                    portNumber = Integer.parseInt(args[0]);
+                }
+                catch(Exception e) {
+                    System.out.println("Invalid port number.");
+                    System.out.println("Usage is: > java Server [portNumber]");
+                    return;
+                }
+            default:
+                System.out.println("Usage is: > java Server [portNumber]");
+                return;
+
+        }
+        
+        // Creating and starting the server
+        Server server = new Server(portNumber);
+        server.start();
+    }
 	
 	
 }
