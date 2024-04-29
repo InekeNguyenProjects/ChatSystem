@@ -78,7 +78,7 @@ public class ClientChatWindow {
         bottomPanel.add(end, BorderLayout.LINE_END);
         
         innerFrame.getContentPane().add(mainPanel);
-        innerFrame.setSize(300,500);
+        innerFrame.setSize(400,600);
         innerFrame.setVisible(false);
         innerFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
@@ -126,10 +126,33 @@ public class ClientChatWindow {
         input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         showMessage("\n Input and Output streams are good to go. Have fun chatting! \n");
     }
+    
+    private void displayChatWhileTalking () throws IOException {
+    	while (true) {
+    		try {
+    			message = (String) input.readLine() + "\n";
+    			showMessage (message);
+    		}
+    		catch (Exception e) {
+    			showMessage("Error: There is an issue showing chat message on screen.");
+    		}
+    	}
+    }
 
     
     // Main method that runs the entire chat interface
     public void run () {
+    	try {
+            connectToServer();
+            setupStreams();
+            displayChatWhileTalking();		
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	finally {
+    		closeStreams ();
+    	}
     	
     }
 
