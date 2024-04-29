@@ -160,7 +160,7 @@ public class ClientChatWindow {
 		// TODO Auto-generated method stub
 		ClientChatWindow clientChat = new ClientChatWindow();
 		
-		clientChat.setup("6.tcp.ngrok.io");
+		clientChat.setup("0.tcp.ngrok.io");
 		clientChat.run();
 
 	}
