@@ -180,6 +180,7 @@ public class Client  {
                 }
                 catch(Exception e) {
                     System.out.println("Invalid port number.\nUsage is: > java Client [username] [portNumber] [serverAddress]");
+                    scan.close();
                     return;
                 }
             case 3:
@@ -187,14 +188,17 @@ public class Client  {
                 serverAddress = args[2];
             default: // if number of arguments are invalid
                 System.out.println("Usage is: > java Client [username] [portNumber] [serverAddress]");
+                scan.close();
                 return;
         }
         
         // create the Client object
         Client client = new Client(serverAddress, portNumber, userName);
         // try to connect to the server and return if not connected
-        if(!client.start())
-            return;
+        if (!client.start()) {
+        	scan.close();
+            return; 
+         }
 
         System.out.println("\nHello.! Welcome to the chatroom.");
         System.out.println("Instructions:");

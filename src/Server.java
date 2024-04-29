@@ -34,6 +34,7 @@ public class Server {
     // to stop the server
     protected void stop() {
     	serverIsAlive = false;
+    	
         try {
             new Socket("localhost", port);
         }
