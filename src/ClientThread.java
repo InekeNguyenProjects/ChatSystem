@@ -23,8 +23,9 @@ public class ClientThread extends Thread {
 	
 	public ClientThread (Socket socket) {
         // a unique id
-        id = ++uniqueId;
+        ID = Server.getID();
         this.socket = socket;
+        
         //Creating both Data Stream
         System.out.println("Thread trying to create Object Input/Output Streams");
         try
@@ -33,15 +34,64 @@ public class ClientThread extends Thread {
             input  = new ObjectInputStream(socket.getInputStream());
             // read the username
             username = (String) input.readObject();
-            broadcast(username + " has joined the chat room.");
+            Server.broadcast(username + " has joined the chat room.");
         }
         catch (IOException e) {
-            display("Exception creating new Input/output Streams: " + e);
+            Server.display("Exception creating new Input/output Streams: " + e);
             return;
         }
         catch (ClassNotFoundException e) {
         }
         date = new Date().toString() + "\n";
     }
+	
+	
+    public String getUsername () {
+        return username;
+    }
+
+    public void setUsername (String username) {
+        this.username = username;
+    }
+    
+    public boolean writeMessage(String msg) {
+        // if Client is still connected send the message to it
+        if(!socket.isConnected()) {
+            close();
+            return false;
+        }
+        // write the message to the stream
+        try {
+            output.writeObject(msg);
+        }
+        // if an error occurs, do not abort just inform the user
+        catch(IOException e) {
+            System.out.println("Error sending message to " + username) ;
+            e.toString();
+        }
+        return true;
+    }
+    
+    private void close() {
+        try {
+            if (output != null) 
+            	output.close();
+        }
+        catch (Exception e) {}
+        
+        try {
+            if (input != null) 
+            	input.close();
+        }
+        catch (Exception e) {};
+        
+        try {
+            if (socket != null) 
+            	socket.close();
+        }
+        catch (Exception e) {}
+    }
+    
+    
 
 }

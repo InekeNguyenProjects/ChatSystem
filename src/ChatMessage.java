@@ -25,4 +25,16 @@ public class ChatMessage implements Serializable {
 		this.type =type;
 		this.message = message;
 	}
+	
+	public static int getWho () {
+		return WHO;
+	}
+	
+	public static int getMsg () {
+		return MESSAGE;
+	}
+	
+	public static int getLogout() {
+		return LOGOUT;
+	}
 }

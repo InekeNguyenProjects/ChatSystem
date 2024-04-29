@@ -20,10 +20,11 @@ public class ListenerThread extends Thread {
                 System.out.print("> ");
             }
             catch(IOException e) {
-                System.out.println("Server has closed the connection: " + e );
+                System.out.println("Server has closed the connection: " + e);
                 break;
             }
             catch(ClassNotFoundException e2) {
+            	e2.getMessage();
             }
         }
     }

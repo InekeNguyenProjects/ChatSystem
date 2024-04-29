@@ -10,7 +10,7 @@ public class Server {
 	private static int ID;
 	
 	// ArrayList to keep all clients
-	private ArrayList <ClientThread> clientList;
+	private static ArrayList <ClientThread> clientList;
 	
 	// Display the time of the message
 	private static SimpleDateFormat time;
@@ -41,14 +41,18 @@ public class Server {
         }
     }
     
+    public static int getID () {
+    	return ID;
+    }
+    
     // Display an event to the console
-    private static void display(String msg) {
+    public static void display(String msg) {
         String newTime = time.format(new Date()) + " " + msg;
         System.out.println(newTime);
     }
     
- // to broadcast a message to all Clients
-    private synchronized boolean broadcast(String message) {
+    // Broadcast a message to all Clients
+    public static synchronized boolean broadcast(String message) {
         // add timestamp to the message
         String newtime = time.format(new Date());
 
@@ -63,7 +67,7 @@ public class Server {
         // if private message, send message to mentioned username only
         if(isPrivate == true)
         {
-            String tocheck=privateMessage[1].substring(1, privateMessage[1].length());
+            String toCheck = privateMessage[1].substring(1, privateMessage[1].length());
 
             message = privateMessage[0]+ privateMessage[2];
             String messageLf = time + " " + message + "\n";
@@ -72,14 +76,15 @@ public class Server {
             // we loop in reverse order to find the mentioned username
             for(int y = clientList.size(); --y >= 0;)
             {
-                ClientThread ct1 = clientList.get(y);
-                String check = ct1.getUsername();
-                if(check.equals(tocheck))
+                ClientThread clientThread1 = clientList.get(y);
+                String check = clientThread1.getUsername();
+                
+                if(check.equals(toCheck))
                 {
                     // try to write to the Client if it fails remove it from the list
-                    if(!ct1.writeMsg(messageLf)) {
+                    if(!clientThread1.writeMessage(messageLf)) {
                     	clientList.remove(y);
-                        display("Disconnected Client " + ct1.username + " removed from list.");
+                        display("Disconnected Client " + clientThread1.username + " removed from list.");
                     }
                     
                     // username found and delivered the message
@@ -93,9 +98,7 @@ public class Server {
             
             // mentioned user not found, return false
             if(found != true)
-            {
                 return false;
-            }
         }
         else // if message is a broadcast message
         {
@@ -106,11 +109,12 @@ public class Server {
             // we loop in reverse order in case we would have to remove a Client
             // because it has disconnected
             for(int i = clientList.size(); --i >= 0;) {
-                ClientThread ct = clientList.get(i);
+                ClientThread clientThread2 = clientList.get(i);
+                
                 // try to write to the Client if it fails remove it from the list
-                if(!ct.writeMsg(messageLf)) {
+                if(!clientThread2.writeMessage(messageLf)) {
                     clientList.remove(i);
-                    display("Disconnected Client " + ct.username + " is removed from list.");
+                    display("Disconnected Client " + clientThread2.username + " is removed from list.");
                 }
             }
         }
